@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
 
 import { HistoryItemType } from '@app-types/history';
+
 import { HistoryItem } from '@components/HistoryItem';
+
 import { useHistoryStore } from '@store/historyStore';
 import { removeFromHistory } from '@utils/storage';
 import { useShallow } from 'zustand/react/shallow';
