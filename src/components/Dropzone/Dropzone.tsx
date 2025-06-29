@@ -46,7 +46,7 @@ export const Dropzone: FC<Props> = ({ file, status, error, onFileSelect, onClear
             e.preventDefault();
             e.stopPropagation();
         },
-        [isProcessing]
+        []
     );
 
     const handleDragLeave = useCallback((e: React.DragEvent) => {
@@ -82,7 +82,7 @@ export const Dropzone: FC<Props> = ({ file, status, error, onFileSelect, onClear
                 handleFileSelect(droppedFile);
             }
         },
-        [isProcessing, onFileSelect]
+        [isProcessing]
     );
 
     const handleInputChange = useCallback(
@@ -94,7 +94,7 @@ export const Dropzone: FC<Props> = ({ file, status, error, onFileSelect, onClear
                 e.target.value = '';
             }
         },
-        [onFileSelect]
+        []
     );
 
     const handleUploadClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
@@ -139,24 +139,24 @@ export const Dropzone: FC<Props> = ({ file, status, error, onFileSelect, onClear
 
     const renderStatusText = () => {
         if (validationError) {
-            return <Typography color="error">{validationError}</Typography>;
+            return <Typography color="error" size="l" as="div">{validationError}</Typography>;
         }
         if (isProcessing) {
-            return 'идёт парсинг файла';
+            return <Typography size="l" as="div">идёт парсинг файла</Typography>;
         }
         if (status === 'completed') {
-            return 'готово!';
+            return <Typography size="l" as="div">готово!</Typography>;
         }
         if (error) {
-            return <Typography color="error">{error}</Typography>;
+            return <Typography color="error" size="l" as="div">{error}</Typography>;
         }
         if (file) {
-            return 'файл загружен!';
+            return <Typography size="l" as="div">файл загружен!</Typography>;
         }
         if (isDragActive) {
-            return 'Отпустите для загрузки';
+            return <Typography size="l" as="div">Отпустите для загрузки</Typography>;
         }
-        return 'или перетащите сюда .csv файл';
+        return <Typography size="l" as="div">или перетащите сюда .csv файл</Typography>;
     };
 
     return (
@@ -173,11 +173,11 @@ export const Dropzone: FC<Props> = ({ file, status, error, onFileSelect, onClear
             role="button"
             tabIndex={0}
         >
-            <input type="file" accept=".csv" ref={inputRef} onChange={handleInputChange} hidden />
+            <input data-testid="file-input" type="file" accept=".csv" ref={inputRef} onChange={handleInputChange} hidden />
 
             {renderContent()}
 
-            <Typography size="l">{renderStatusText()}</Typography>
+            {renderStatusText()}
         </div>
     );
 };

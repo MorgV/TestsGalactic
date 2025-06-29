@@ -16,9 +16,10 @@ type Props = {
     item: HistoryItemType;
     onClick: (item: HistoryItemType) => void;
     onDelete: (id: string) => void;
+    index: number
 };
 
-export const HistoryItem: FC<Props> = ({ item, onClick, onDelete }) => {
+export const HistoryItem: FC<Props> = ({ item, onClick, onDelete, index }) => {
     const { timestamp, id, fileName, highlights } = item;
 
     const date = formatDate(timestamp);
@@ -36,7 +37,6 @@ export const HistoryItem: FC<Props> = ({ item, onClick, onDelete }) => {
 
         onClick(item);
     };
-
     return (
         <div className={styles.root}>
             <Button
@@ -60,6 +60,7 @@ export const HistoryItem: FC<Props> = ({ item, onClick, onDelete }) => {
                 className={styles.deleteButton}
                 aria-label={`Удалить файл ${fileName}`}
                 onClick={handleDeleteButtonClick}
+                data-testid={`delete-button-${index}`}
             >
                 <Trash size={33} />
             </Button>

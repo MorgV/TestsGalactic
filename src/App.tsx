@@ -4,7 +4,7 @@ import { HistoryPage } from '@pages/History';
 import { HomePage } from '@pages/Home';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-function App() {
+export function App() {
     return (
         <Router
             future={{

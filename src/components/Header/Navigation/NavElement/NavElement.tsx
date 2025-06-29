@@ -11,14 +11,21 @@ type Props = {
     title: string;
     end?: boolean;
     icon: React.ReactNode;
+    idTest?: string;  // добавляем необязательный проп для кастомного атрибута
 };
 
-export const NavElement: FC<Props> = ({ to, title, icon, end = false }) => {
+
+export const NavElement: FC<Props> = ({ to, title, icon, end = false, idTest }) => {
     return (
         <NavLink
             to={to}
-            className={({ isActive }: { isActive: boolean }) => cn(styles.root, { [styles.active]: isActive })}
-            end={end}
+            className={({ isActive }: { isActive: boolean }) =>
+                cn(styles.root, {
+                    [styles.active]: isActive,
+                    'active-link': isActive,
+                })
+            } end={end}
+            data-testid={idTest}
         >
             {icon}
             <Typography size="m">{title}</Typography>

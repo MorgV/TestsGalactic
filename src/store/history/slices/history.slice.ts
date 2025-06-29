@@ -1,32 +1,76 @@
-import { HistoryItemType } from '@app-types/history';
-import { getHistory } from '@utils/storage';
-import { StateCreator } from 'zustand';
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-import { HistoryState, IHistorySlice } from '../types';
+import { HistoryList } from '@components/HistoryList';
 
-type HistorySliceCreator = StateCreator<HistoryState, [['zustand/devtools', never]], [], IHistorySlice>;
+jest.mock('@store/historyStore', () => ({
+  useHistoryStore: jest.fn(),
+}));
 
-export const createHistorySlice: HistorySliceCreator = (set) => ({
-    history: getHistory(),
-    selectedItem: null,
-    clearHistory: () => set({ history: [] }, false, 'history/clearHistory'),
-    removeFromHistory: (id: string) =>
-        set(
-            (state) => ({
-                history: state.history.filter((item) => item.id !== id),
-            }),
-            false,
-            'history/removeFromHistory'
-        ),
-    addToHistory: (item: HistoryItemType) =>
-        set(
-            (state) => ({
-                history: [...state.history, item],
-            }),
-            false,
-            'history/addToHistory'
-        ),
-    setSelectedItem: (item: HistoryItemType) => set({ selectedItem: item }, false, 'history/setSelectedItem'),
-    resetSelectedItem: () => set({ selectedItem: null }, false, 'history/resetSelectedItem'),
-    updateHistoryFromStorage: () => set({ history: getHistory() }, false, 'history/updateHistoryFromStorage'),
+import { useHistoryStore } from '@store/historyStore';
+
+describe('HistoryList component', () => {
+  const mockClearHistory = jest.fn();
+  const mockRemoveFromHistory = jest.fn();
+  const mockSetSelectedItem = jest.fn();
+  const mockShowModal = jest.fn();
+  const mockUpdateHistoryFromStorage = jest.fn();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    // Приводим useHistoryStore к типу jest.Mock через unknown, чтобы избежать ошибки
+    (useHistoryStore as unknown as jest.Mock).mockImplementation((selector) =>
+      selector({
+        history: [
+          {
+            id: '1',
+            fileName: 'sample.csv',
+            timestamp: Date.now(),
+            highlights: ['some'],
+          },
+        ],
+        clearHistory: mockClearHistory,
+        removeFromHistory: mockRemoveFromHistory,
+        setSelectedItem: mockSetSelectedItem,
+        showModal: mockShowModal,
+        updateHistoryFromStorage: mockUpdateHistoryFromStorage,
+      })
+    );
+  });
+
+  test('рендерит элементы истории из заглушенного стора', async () => {
+    render(<HistoryList />);
+    expect(await screen.findByText('sample.csv')).toBeInTheDocument();
+  });
+
+  test('удаляет элемент из истории при клике по кнопке удаления', async () => {
+    (useHistoryStore as unknown as jest.Mock).mockImplementation((selector) =>
+      selector({
+        history: [
+          {
+            id: '1',
+            fileName: 'delete-me.csv',
+            timestamp: Date.now(),
+            highlights: ['some'],
+          },
+        ],
+        clearHistory: mockClearHistory,
+        removeFromHistory: mockRemoveFromHistory,
+        setSelectedItem: mockSetSelectedItem,
+        showModal: mockShowModal,
+        updateHistoryFromStorage: mockUpdateHistoryFromStorage,
+      })
+    );
+
+    const user = userEvent.setup();
+
+    render(<HistoryList />);
+
+    const deleteButton = await screen.findByTestId('delete-button-0');
+    await user.click(deleteButton);
+
+    expect(mockRemoveFromHistory).toHaveBeenCalledWith('1');
+  });
 });

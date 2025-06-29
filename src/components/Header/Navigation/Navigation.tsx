@@ -8,9 +8,9 @@ import styles from './Navigation.module.css';
 export const Navigation = () => {
     return (
         <nav className={styles.root}>
-            <NavElement to="/" title="CSV Аналитик" icon={<Upload size={36} />} end />
-            <NavElement to="/generate" title="CSV Генератор" icon={<Create size={36} />} />
-            <NavElement to="/history" title="История" icon={<History size={36} />} />
+            <NavElement to="/" idTest="link-upload" title="CSV Аналитик" icon={<Upload size={36} />} end />
+            <NavElement to="/generate" idTest="link-generate" title="CSV Генератор" icon={<Create size={36} />} />
+            <NavElement to="/history" idTest="link-history" title="История" icon={<History size={36} />} />
         </nav>
     );
 };

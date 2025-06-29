@@ -62,6 +62,16 @@ export default [
               group: 'external',
               position: 'before',
             },
+            {
+              pattern: '@store/**',
+              group: 'internal',
+              position: 'before',  // ставим @store первыми из internal
+            },
+            {
+              pattern: '@components/**',
+              group: 'internal',
+              position: 'after',   // @components идут после @store
+            },
           ],
           pathGroupsExcludedImportTypes: ['react'],
           'newlines-between': 'always',
@@ -73,4 +83,4 @@ export default [
       ],
     },
   },
-]; 
+];

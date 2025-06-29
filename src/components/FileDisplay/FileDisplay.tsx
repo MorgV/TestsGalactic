@@ -32,6 +32,7 @@ export const FileDisplay: FC<Props> = ({ fileName, onClear, isCompleted, isProce
                 className={cn(styles.clearFileButton, styles.customBorder)}
                 onClick={onClear}
                 disabled={isProcessing}
+                aria-label="Очистить файл"
             >
                 <Clear size={22} />
             </Button>
